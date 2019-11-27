@@ -28,7 +28,7 @@ def fmtData (path_to_csv):
         
         if(diffMin <= 255 and diffMin >= 0 and diffMax >= 0 and diffMax <= 255): 
             red = diffMax
-            green =0 
+            green = 0 
             blue = diffMin
         else:
             red=0; green=0; blue=0;

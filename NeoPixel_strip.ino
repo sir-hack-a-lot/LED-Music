@@ -51,8 +51,12 @@ void setLevel(Adafruit_NeoPixel & strip, int delay_val, int in_color []){
 
 void loop() {
   int color [3];
-  color[0]=255; color[1]=0; color[2]=255;
+  color[0]=255; color[1]=0; color[2]=0;
   uint8_t serial_bytes [4];
+  
+  //int pot = map(analogRead(0), 0 ,1024, 10, 50);
+  //setLevel(strip, pot, color);
+  
   
   if (Serial.available() > 0){
       Serial.readBytes(serial_bytes,4);
@@ -60,5 +64,7 @@ void loop() {
       color[0]=serial_bytes[0]; color[1]=serial_bytes[1]; color[2]=serial_bytes[2];  
       setLevel(strip, serial_bytes[3], color);
    }
+  
+  
     
 }
