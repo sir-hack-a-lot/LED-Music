@@ -15,18 +15,18 @@ void setup() {
 
 void setLevel(Adafruit_NeoPixel & strip, int delay_val, int in_color []){
   uint32_t color = strip.Color(in_color[0], in_color[1], in_color[2]);
-
+  
   for(int i=1; i<LED_COUNT; i++){
     strip.fill(color,0,i);
+    
     if (Serial.available() > 0){
-      uint8_t incomingByte = Serial.read();
-      if (incomingByte != 0xA) { 
-        uint8_t in_val = incomingByte;
-        if(in_val > 5 && in_val < 500){
-          delay_val = in_val;
-        }
-      }
+      uint8_t serial_bytes [4];
+      Serial.readBytes(serial_bytes,4);
+      
+      delay_val = serial_bytes[3];      
+      color = strip.Color(serial_bytes[0], serial_bytes[1], serial_bytes[2]);
     }
+    
     delay(delay_val);
     strip.show();
   }
@@ -35,6 +35,15 @@ void setLevel(Adafruit_NeoPixel & strip, int delay_val, int in_color []){
   for(int i=LED_COUNT; i>0; i--){
     strip.fill(color,0,i);
     strip.show();
+    
+    if (Serial.available() > 0){
+      uint8_t serial_bytes [4];
+      Serial.readBytes(serial_bytes,4);
+      
+      delay_val = serial_bytes[3];      
+      color = strip.Color(serial_bytes[0], serial_bytes[1], serial_bytes[2]);
+    }
+    
     delay(delay_val);
     strip.clear();
     } 
@@ -48,11 +57,8 @@ void loop() {
   if (Serial.available() > 0){
       Serial.readBytes(serial_bytes,4);
       
-      in_val = serial_bytes[0]
-      for (int i=1; i<4; i++){
-        color[i]= serial_bytes[i];
-      }
-      setLevel(strip, in_val, color);
+      color[0]=serial_bytes[0]; color[1]=serial_bytes[1]; color[2]=serial_bytes[2];  
+      setLevel(strip, serial_bytes[3], color);
    }
     
 }
